@@ -1,5 +1,5 @@
 {
-    "name": "hono-vue-starter",
+    "name": "aihub",
     "main": "src/app.js",
     "compatibility_date": "2026-05-11",
     "compatibility_flags": ["nodejs_compat"],

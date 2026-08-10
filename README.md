@@ -1,3 +1,3 @@
-# cfworker-hono-vue-starter
+# aihub
 
-Cloudflare Worker 上的 Hono + Vue 开始代码
+Cloudflare Worker 上的 AI 聚合器

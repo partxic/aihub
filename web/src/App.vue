@@ -1,5 +1,5 @@
 <script setup></script>
 
-<template>hono-vue-starter</template>
+<template>aihub</template>
 
 <style scoped></style>

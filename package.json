@@ -1,5 +1,5 @@
 {
-    "name": "hono-vue-starter",
+    "name": "aihub",
     "type": "module",
     "scripts": {
         "deploy": "wrangler deploy",
