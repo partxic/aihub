@@ -15,5 +15,13 @@
     },
     "build": {
         "command": "npm install && cd web && npm install && npm run build"
-    }
+    },
+    "d1_databases": [
+        {
+            "binding": "db",
+            "database_name": "aihub-db",
+            "database_id": "9cd8e07b-7854-4864-b466-f864633f0324",
+            "remote": true
+        }
+    ]
 }
