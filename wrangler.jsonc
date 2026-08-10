@@ -3,6 +3,12 @@
     "main": "src/app.js",
     "compatibility_date": "2026-05-11",
     "compatibility_flags": ["nodejs_compat"],
+    "observability": {
+        "logs": {
+            "enabled": true,
+            "invocation_logs": true
+        }
+    },
     "assets": {
         "directory": "./web/dist/",
         "binding": "assets"
