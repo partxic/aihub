@@ -7,6 +7,13 @@ import crypto from 'crypto'
 import { decode, sign, verify } from 'hono/jwt'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 
+export const cookieName = 'user'
+const jwtExpire = 2 * 60
+const cookieExpire = 24 * 60 * 60
+const now = () => Math.floor(Date.now() / 1000)
+const signAlg = 'HS256'
+export const hashAlg = 'sha256'
+
 auth.post('/login', async c => {
     const { username, password } = await c.req.json()
     if (typeof username !== 'string' || username === '' || typeof password !== 'string' || password === '') {
@@ -21,7 +28,7 @@ auth.post('/login', async c => {
         return c.text('用户不存在', 404)
     }
 
-    const pwdHash = crypto.createHash('sha256').update(password).digest('hex')
+    const pwdHash = crypto.createHash(hashAlg).update(password).digest('hex')
     if (pwdHash !== user.pwdHash) {
         return c.text('密码错误', 403)
     }
@@ -29,30 +36,30 @@ auth.post('/login', async c => {
     const token = await sign(
         {
             ...user,
-            exp: Math.floor(Date.now() / 1000) + 5 * 60
+            exp: now() + jwtExpire
         },
         c.env.jwt_secret,
-        'HS256'
+        signAlg
     )
 
-    setCookie(c, 'user', token, {
+    setCookie(c, cookieName, token, {
         httpOnly: true,
         sameSite: 'strict',
-        maxAge: 24 * 60 * 60
+        maxAge: cookieExpire
     })
 
     return c.text('登录成功', 200)
 })
 
 export const needAuth = async (c, next) => {
-    const token = getCookie(c, 'user')
+    const token = getCookie(c, cookieName)
     if (typeof token === 'undefined') {
         return c.text('未授权', 401)
     }
 
     try {
-        const user = await verify(token, c.env.jwt_secret, 'HS256')
-        c.set('user', user)
+        const user = await verify(token, c.env.jwt_secret, signAlg)
+        c.set(cookieName, user)
     } catch {
         try {
             const { payload } = decode(token)
@@ -71,21 +78,21 @@ export const needAuth = async (c, next) => {
             const newToken = await sign(
                 {
                     ...user,
-                    exp: Math.floor(Date.now() / 1000) + 5 * 60
+                    exp: now() + jwtExpire
                 },
                 c.env.jwt_secret,
-                'HS256'
+                signAlg
             )
 
-            setCookie(c, 'user', newToken, {
+            setCookie(c, cookieName, newToken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                maxAge: 24 * 60 * 60
+                maxAge: cookieExpire
             })
 
-            c.set('user', user)
+            c.set(cookieName, user)
         } catch {
-            return c.text('验证失败', 401)
+            return c.text('验证失败', 403)
         }
     }
 
@@ -97,7 +104,7 @@ auth.get('/status', needAuth, c => {
 })
 
 auth.get('/logout', needAuth, c => {
-    deleteCookie(c, 'user')
+    deleteCookie(c, cookieName)
     return c.text('已登出', 200)
 })
 
