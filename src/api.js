@@ -31,4 +31,7 @@ api.route('/auth', auth)
 import account from './account.js'
 api.route('/account', account)
 
+import user from './user.js'
+api.route('/user', user)
+
 export default api
