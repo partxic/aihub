@@ -25,4 +25,7 @@ api.get('/status', c => {
     return c.text('后端正常', 200)
 })
 
+import auth from './auth.js'
+api.route('/auth', auth)
+
 export default api
