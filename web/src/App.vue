@@ -1,6 +1,4 @@
 <script setup>
-document.title = '加载中...'
-
 import { ref, watch } from 'vue'
 import BackendValidator from '@/components/BackendValidator.vue'
 import { useRoute, useRouter } from 'vue-router'
