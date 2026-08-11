@@ -1,6 +1,4 @@
 <script setup>
-document.title = '统一登录'
-
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
