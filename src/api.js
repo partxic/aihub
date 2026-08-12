@@ -21,6 +21,12 @@ api.use(async (c, next) => {
     return await next()
 })
 
+import { setSecret } from './aes256gcm.js'
+api.use(async (c, next) => {
+    setSecret(c.env.jwt_secret)
+    return await next()
+})
+
 api.get('/status', c => {
     return c.text('后端正常', 200)
 })
@@ -33,5 +39,8 @@ api.route('/account', account)
 
 import user from './user.js'
 api.route('/user', user)
+
+import provider from './provider.js'
+api.route('/provider', provider)
 
 export default api

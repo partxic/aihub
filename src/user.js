@@ -1,23 +1,15 @@
 import { Hono } from 'hono'
 const user = new Hono()
 
-import { cookieName, hashAlg, needAuth } from './auth.js'
+import { cookieName, hashAlg, needAuth, needPermission } from './auth.js'
 user.use(needAuth)
+user.use(needPermission)
 
 import { users } from './db.js'
 import db from './db.js'
 import { eq } from 'drizzle-orm'
 
 import crypto from 'crypto'
-
-user.use(async (c, next) => {
-    const reqUser = c.get(cookieName)
-    if (!reqUser.isAdmin) {
-        return c.text('无权限', 403)
-    }
-
-    return await next()
-})
 
 user.get('/list', async c => {
     const result = await db()

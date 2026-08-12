@@ -5,6 +5,7 @@ import { cookieName, hashAlg, needAuth } from './auth.js'
 account.use(needAuth)
 
 import crypto from 'crypto'
+import { encrypt } from './aes256gcm.js'
 
 import { users } from './db.js'
 import db from './db.js'
@@ -28,7 +29,8 @@ account.post('/reset-password', async c => {
 
 account.get('/api-key', c => {
     const user = c.get(cookieName)
-    return c.text(user.name + '.' + user.pwdHash, 200)
+    const key = encrypt(user.name + '.' + user.pwdHash)
+    return c.text(key, 200)
 })
 
 export default account

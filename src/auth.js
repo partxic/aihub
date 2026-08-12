@@ -2,7 +2,9 @@ import { Hono } from 'hono'
 const auth = new Hono()
 
 import db from './db.js'
+
 import crypto from 'crypto'
+import { encrypt, decrypt } from './aes256gcm.js'
 
 import { decode, sign, verify } from 'hono/jwt'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
@@ -42,7 +44,8 @@ auth.post('/login', async c => {
         signAlg
     )
 
-    setCookie(c, cookieName, token, {
+    const encryptedToken = encrypt(token)
+    setCookie(c, cookieName, encryptedToken, {
         httpOnly: true,
         sameSite: 'strict',
         maxAge: cookieExpire
@@ -52,11 +55,12 @@ auth.post('/login', async c => {
 })
 
 export const needAuth = async (c, next) => {
-    const token = getCookie(c, cookieName)
-    if (typeof token === 'undefined') {
+    const encryptedToken = getCookie(c, cookieName)
+    if (typeof encryptedToken === 'undefined') {
         return c.text('未授权', 401)
     }
 
+    const token = decrypt(encryptedToken)
     try {
         const user = await verify(token, c.env.jwt_secret, signAlg)
         c.set(cookieName, user)
@@ -84,7 +88,8 @@ export const needAuth = async (c, next) => {
                 signAlg
             )
 
-            setCookie(c, cookieName, newToken, {
+            const newEncryptedToken = encrypt(newToken)
+            setCookie(c, cookieName, newEncryptedToken, {
                 httpOnly: true,
                 sameSite: 'strict',
                 maxAge: cookieExpire
@@ -94,6 +99,15 @@ export const needAuth = async (c, next) => {
         } catch {
             return c.text('验证失败', 403)
         }
+    }
+
+    return await next()
+}
+
+export const needPermission = async (c, next) => {
+    const user = c.get(cookieName)
+    if (!user.isAdmin) {
+        return c.text('无权限', 403)
     }
 
     return await next()
