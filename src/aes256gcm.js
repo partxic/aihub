@@ -28,6 +28,5 @@ export const decrypt = data => {
     const decipher = crypto.createDecipheriv(alg, secretKey, iv)
     decipher.setAuthTag(authTag)
 
-    const text = decipher.update(encryptedText, 'hex', 'utf8') + decipher.final('utf8')
-    return text
+    return decipher.update(encryptedText, 'hex', 'utf8') + decipher.final('utf8')
 }
