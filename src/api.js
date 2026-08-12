@@ -43,4 +43,7 @@ api.route('/user', user)
 import provider from './provider.js'
 api.route('/provider', provider)
 
+import unimodel from './unimodel.js'
+api.route('/unimodel', unimodel)
+
 export default api
