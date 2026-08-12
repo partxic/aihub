@@ -49,4 +49,7 @@ api.route('/unimodel', unimodel)
 import mcp from './mcp.js'
 api.route('/mcp', mcp)
 
+import endpoint from './endpoint.js'
+api.route('/endpoint', endpoint)
+
 export default api
