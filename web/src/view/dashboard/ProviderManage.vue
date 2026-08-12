@@ -135,7 +135,7 @@ onMounted(fetchProviders)
             <el-form-item label="基础地址">
                 <el-input v-model="form.baseUrl" type="text" />
             </el-form-item>
-            <el-form-item label="API密钥">
+            <el-form-item label="API 密钥">
                 <el-input v-model="form.apiKey" type="password" show-password />
             </el-form-item>
         </el-form>
