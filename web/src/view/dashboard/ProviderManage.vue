@@ -22,7 +22,7 @@ const finalModelName = computed(() => {
 
 const apiUrl = computed(() => {
     const url = new URL(window.location.href)
-    return `${url.protocol}//${url.host}/api/compat/v1`
+    return `${url.protocol}//${url.host}/api/endpoint/v1`
 })
 
 const fetchProviders = async () => {
