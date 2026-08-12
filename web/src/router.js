@@ -59,8 +59,8 @@ const router = createRouter({
                     path: 'mcp-manage',
                     name: 'mcp-manage',
                     meta: {
-                        tab: 'MCP管理',
-                        title: 'MCP管理'
+                        tab: 'MCP 管理',
+                        title: 'MCP 管理'
                     },
                     component: () => import('@/view/dashboard/McpManage.vue')
                 }

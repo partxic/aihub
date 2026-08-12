@@ -62,8 +62,8 @@ const addModel = () => {
 
 <template>
     <div class="model-array-input" style="flex: 1">
-        <div v-for="(_, index) in modelArray" class="array-item row">
-            <el-input v-model="modelArray[index]" readonly />
+        <div v-for="(value, index) in modelArray" class="array-item row">
+            <el-input :model-value="value" readonly />
             <el-button type="danger" :icon="Delete" @click="modelArray.splice(index, 1)" link />
         </div>
         <div class="row">

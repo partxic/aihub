@@ -46,4 +46,7 @@ api.route('/provider', provider)
 import unimodel from './unimodel.js'
 api.route('/unimodel', unimodel)
 
+import mcp from './mcp.js'
+api.route('/mcp', mcp)
+
 export default api
