@@ -12,7 +12,7 @@ import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 export const cookieName = 'user'
 const jwtExpire = 2 * 60
 const cookieExpire = 24 * 60 * 60
-const now = () => Math.floor(Date.now() / 1000)
+export const now = () => Math.floor(Date.now() / 1000)
 const signAlg = 'HS256'
 export const hashAlg = 'sha256'
 
