@@ -35,27 +35,28 @@ export default async c => {
     try {
         let lastError = { status: 404, data: '无可用模型' }
 
+        const commonHeader = new Headers()
+        commonHeader.set('Content-Type', 'application/json; charset=UTF-8')
+        const allowedPrefixes = ['x-', 'anthropic-', 'user-']
+        for (const [key, value] of Object.entries(c.req.header())) {
+            const lowerKey = key.toLowerCase()
+            const isAllowed = allowedPrefixes.some(prefix => lowerKey.startsWith(prefix.toLowerCase()))
+            if (isAllowed) {
+                commonHeader.set(key, value)
+            }
+        }
+
         for (const model of models) {
             const provider = c.get('providers').find(provider => provider.name === model.providerName)
             if (typeof provider === 'undefined') {
                 return c.text('供应不存在', 404)
             }
 
+            const reqHeader = new Headers(commonHeader)
+            reqHeader.set('Authorization', `Bearer ${provider.apiKey}`)
+
             for (let i = 1; i <= 5; i++) {
                 try {
-                    const reqHeader = new Headers()
-                    reqHeader.set('Authorization', `Bearer ${provider.apiKey}`)
-                    reqHeader.set('Content-Type', 'application/json; charset=UTF-8')
-
-                    const allowedPrefixes = ['x-', 'anthropic-', 'user-']
-                    for (const [key, value] of Object.entries(c.req.header())) {
-                        const lowerKey = key.toLowerCase()
-                        const isAllowed = allowedPrefixes.some(prefix => lowerKey.startsWith(prefix.toLowerCase()))
-                        if (isAllowed) {
-                            reqHeader.set(key, value)
-                        }
-                    }
-
                     body.model = model.modelName
                     const resp = await fetch(`${provider.baseUrl}/chat/completions`, {
                         method: 'POST',
