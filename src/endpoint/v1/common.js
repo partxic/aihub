@@ -5,7 +5,7 @@ export default async c => {
     const { model } = body
 
     const user = c.get('user')
-    console.log(`${user.name}: chat with ${model}`)
+    console.log(`${user.name}: call ${model}`)
 
     const spliterIdx = model.indexOf('/')
     const providerName = model.substring(0, spliterIdx)
