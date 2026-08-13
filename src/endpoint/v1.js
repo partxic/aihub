@@ -15,4 +15,15 @@ v1.route('/models', models)
 import chat from './v1/chat.js'
 v1.route('/chat', chat)
 
+import common from './v1/common.js'
+v1.post('/responses', common)
+v1.post('/embeddings', common)
+v1.post('/rerank', common)
+
+import audio from './v1/audio.js'
+v1.route('/audio', audio)
+
+import images from './v1/images.js'
+v1.route('/images', images)
+
 export default v1
