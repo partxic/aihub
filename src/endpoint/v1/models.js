@@ -39,6 +39,8 @@ models.get('/', async c => {
                             } catch (error) {
                                 lastError = { status: 500, data: String(error) }
                             }
+
+                            await c.req.wait1s()
                         }
 
                         throw lastError

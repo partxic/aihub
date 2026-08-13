@@ -12,4 +12,7 @@ v1.use(async (c, next) => {
 import models from './v1/models.js'
 v1.route('/models', models)
 
+import chat from './v1/chat.js'
+v1.route('/chat', chat)
+
 export default v1

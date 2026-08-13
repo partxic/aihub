@@ -42,6 +42,11 @@ endpoint.use(async (c, next) => {
     return await next()
 })
 
+endpoint.use(async (c, next) => {
+    c.req.wait1s = () => new Promise(r => setTimeout(r, 1000))
+    return await next()
+})
+
 import v1 from './endpoint/v1.js'
 endpoint.route('/v1', v1)
 
