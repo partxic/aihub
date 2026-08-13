@@ -3,9 +3,10 @@ const v1 = new Hono()
 
 import { providers } from '../db.js'
 import db from '../db.js'
+import cache from '../cache.js'
 
 v1.use(async (c, next) => {
-    c.set('providers', await db().select().from(providers))
+    c.set('providers', await cache('providers', () => db().select().from(providers)))
     return await next()
 })
 

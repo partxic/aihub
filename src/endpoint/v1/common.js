@@ -1,4 +1,5 @@
 import db from '../../db.js'
+import cache from '../../cache.js'
 
 export default async c => {
     const body = await c.req.json()
@@ -13,10 +14,12 @@ export default async c => {
 
     const models = []
     if (providerName === 'unimodel') {
-        const unimodel = await db().query.unimodels.findFirst({
-            columns: { models: true },
-            where: (unimodels, { eq }) => eq(unimodels.name, modelName)
-        })
+        const unimodel = await cache(`unimodel:${modelName}`, () =>
+            db().query.unimodels.findFirst({
+                columns: { models: true },
+                where: (unimodels, { eq }) => eq(unimodels.name, modelName)
+            })
+        )
 
         if (typeof unimodel === 'undefined') {
             return c.text('模型不存在', 404)

@@ -6,6 +6,7 @@ endpoint.use(cors())
 
 import { decrypt } from './aes256gcm.js'
 import db from './db.js'
+import cache from './cache.js'
 
 endpoint.use(async (c, next) => {
     const authorization = c.req.header('Authorization')
@@ -25,10 +26,12 @@ endpoint.use(async (c, next) => {
     const userName = token.substring(0, spliterIdx)
     const userPwdHash = token.substring(spliterIdx + 1)
 
-    const user = await db().query.users.findFirst({
-        columns: { name: true, pwdHash: true },
-        where: (users, { eq }) => eq(users.name, userName)
-    })
+    const user = await cache(`user:${userName}`, () =>
+        db().query.users.findFirst({
+            columns: { name: true, pwdHash: true },
+            where: (users, { eq }) => eq(users.name, userName)
+        })
+    )
 
     if (typeof user === 'undefined') {
         return c.text('用户不存在', 404)

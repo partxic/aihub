@@ -5,6 +5,7 @@ import pLimit from 'p-limit'
 
 import { unimodels } from '../../db.js'
 import db from '../../db.js'
+import cache from '../../cache.js'
 
 import { now } from '../../auth.js'
 
@@ -50,11 +51,13 @@ models.get('/', async c => {
         ).flat()
 
         const uniModels = (
-            await db()
-                .select({
-                    name: unimodels.name
-                })
-                .from(unimodels)
+            await cache('unimodels:name', () =>
+                db()
+                    .select({
+                        name: unimodels.name
+                    })
+                    .from(unimodels)
+            )
         ).map(item => ({
             id: `unimodel/${item.name}`,
             object: 'model',
@@ -84,10 +87,12 @@ models.get('/:model{.*}', async c => {
     const modelName = model.substring(spliterIdx + 1)
 
     if (providerName === 'unimodel') {
-        const unimodel = await db().query.unimodels.findFirst({
-            columns: { models: true },
-            where: (unimodels, { eq }) => eq(unimodels.name, modelName)
-        })
+        const unimodel = await cache(`unimodel:${modelName}`, () =>
+            db().query.unimodels.findFirst({
+                columns: { models: true },
+                where: (unimodels, { eq }) => eq(unimodels.name, modelName)
+            })
+        )
 
         if (typeof unimodel === 'undefined') {
             return c.text('模型不存在', 404)
