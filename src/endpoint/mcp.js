@@ -10,6 +10,7 @@ mcp.use(async (c, next) => {
 })
 
 import getTools from './mcp/get-tools.js'
+import toolcall from './mcp/toolcall.js'
 
 mcp.get('/', c => {
     return c.body(null, 405)
@@ -47,6 +48,9 @@ mcp.post('/', async c => {
 
         case 'tools/list':
             return await getTools(c, body)
+
+        case 'tools/call':
+            return await toolcall(c, body)
 
         default:
             return c.text(`unknown method: ${method}`, 404)
