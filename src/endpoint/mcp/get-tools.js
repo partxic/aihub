@@ -11,6 +11,7 @@ export default async (c, body) => {
 
                         const reqHeader = new Headers(mcp.httpHeader)
                         reqHeader.set('Content-Type', 'application/json; charset=UTF-8')
+                        reqHeader.set('Accept', 'application/json, text/event-stream')
 
                         for (let i = 1; i <= 5; i++) {
                             try {
@@ -25,7 +26,16 @@ export default async (c, body) => {
                                 })
 
                                 if (resp.ok) {
-                                    const tools = (await resp.json()).result.tools
+                                    const rawText = await resp.text()
+                                    const rawJSON = rawText.includes('data:')
+                                        ? rawText
+                                              .split('\n')
+                                              .filter(l => l.startsWith('data:'))
+                                              .map(l => l.slice(5).trim())
+                                              .join('')
+                                        : rawText
+
+                                    const tools = JSON.parse(rawJSON).result.tools
                                     return tools.map(item => ({
                                         ...item,
                                         name: `${mcp.name.replaceAll(' ', '_')}-${item.name}`

@@ -15,6 +15,7 @@ export default async (c, body) => {
 
         const reqHeader = new Headers(mcp.httpHeader)
         reqHeader.set('Content-Type', 'application/json; charset=UTF-8')
+        reqHeader.set('Accept', 'application/json, text/event-stream')
 
         for (let i = 1; i <= 5; i++) {
             try {
