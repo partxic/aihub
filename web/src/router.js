@@ -63,6 +63,15 @@ const router = createRouter({
                         title: 'MCP 管理'
                     },
                     component: () => import('@/view/dashboard/McpManage.vue')
+                },
+                {
+                    path: 'cache-manage',
+                    name: 'cache-manage',
+                    meta: {
+                        tab: '缓存管理',
+                        title: '缓存管理'
+                    },
+                    component: () => import('@/view/dashboard/CacheManage.vue')
                 }
             ]
         }

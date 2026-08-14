@@ -34,3 +34,40 @@ export default async (key, fetcher) => {
     inflightFetcher.set(key, promise)
     return await promise
 }
+
+import { Hono } from 'hono'
+export const cache = new Hono()
+
+import { needAuth } from './auth.js'
+cache.use(needAuth)
+
+cache.get('/list', c => {
+    const now = Date.now()
+    const list = []
+
+    for (const [key, entry] of caches.entries()) {
+        if (now >= entry.expiry) {
+            caches.delete(key)
+            continue
+        }
+
+        list.push({
+            key,
+            data: entry.data
+        })
+    }
+
+    return c.json(list, 200)
+})
+
+cache.delete('/delete', c => {
+    const { key } = c.req.query()
+
+    if (typeof key === 'string' && key !== '') {
+        caches.delete(key)
+    } else {
+        caches.clear()
+    }
+
+    return c.text('删除成功', 200)
+})

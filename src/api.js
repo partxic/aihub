@@ -52,4 +52,7 @@ api.route('/mcp', mcp)
 import endpoint from './endpoint.js'
 api.route('/endpoint', endpoint)
 
+import { cache } from './cache.js'
+api.route('/cache', cache)
+
 export default api
