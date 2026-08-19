@@ -1,7 +1,7 @@
 import db from '../../db.js'
 import cache from '../../cache.js'
 
-export default async path => async c => {
+export default path => async c => {
     const body = await c.req.json()
     const { model } = body
 
