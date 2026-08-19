@@ -17,9 +17,9 @@ import chat from './v1/chat.js'
 v1.route('/chat', chat)
 
 import common from './v1/common.js'
-v1.post('/responses', common)
-v1.post('/embeddings', common)
-v1.post('/rerank', common)
+v1.post('/responses', common('responses'))
+v1.post('/embeddings', common('embeddings'))
+v1.post('/rerank', common('rerank'))
 
 import audio from './v1/audio.js'
 v1.route('/audio', audio)

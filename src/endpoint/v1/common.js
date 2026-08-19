@@ -1,7 +1,7 @@
 import db from '../../db.js'
 import cache from '../../cache.js'
 
-export default async c => {
+export default async path => async c => {
     const body = await c.req.json()
     const { model } = body
 
@@ -61,7 +61,7 @@ export default async c => {
             for (let i = 1; i <= 5; i++) {
                 try {
                     body.model = model.modelName
-                    const resp = await fetch(`${provider.baseUrl}/chat/completions`, {
+                    const resp = await fetch(`${provider.baseUrl}/${path}`, {
                         method: 'POST',
                         headers: reqHeader,
                         body: JSON.stringify(body)
