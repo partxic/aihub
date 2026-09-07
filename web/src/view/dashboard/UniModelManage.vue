@@ -87,7 +87,9 @@ onMounted(fetchUniModels)
     <el-button type="primary" :loading="loading" @click="fetchUniModels">刷新</el-button>
     <el-button type="primary" :loading="loading" @click="addUniModel">添加联合模型</el-button>
     <el-table v-loading="loading" :data="unimodels">
-        <el-table-column prop="name" label="名称" width="1000" />
+        <el-table-column prop="name" label="名称" width="1000">
+            <template #default="scope">unimodel/{{ unimodels[scope.$index].name }}</template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作" min-width="100">
             <template #default="scope">
                 <el-button type="primary" @click="editUniModel(scope.$index)" link>编辑</el-button>
